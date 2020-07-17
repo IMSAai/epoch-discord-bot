@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import requests
 from datetime import datetime
+import os
 
 prometheus = commands.Bot(command_prefix='do ')
 
@@ -77,6 +78,6 @@ async def silence(ctx):
 async def ping(ctx):
     await ctx.send('latency: {} ms'.format(round(prometheus.latency * 1000)))
 
-key = ''
+key = os.environ['DISCORD_KEY']
 
 prometheus.run(key)
