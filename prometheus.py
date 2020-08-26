@@ -80,7 +80,6 @@ async def silence(ctx, time=720):
                 await ctx.send('No name was entered within 45 seconds. Cancelling...')
                 break
             query = "REPLACE INTO USERDATA (discorduser,name,email) VALUES ('{}', '{}', '{}')".format(author, name, email)
-            print(query)
             conn.execute(query)
             conn.commit()
             conn.close()
