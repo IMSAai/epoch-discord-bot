@@ -6,12 +6,14 @@ from datetime import timedelta
 import sys
 import sqlite3
 
-bot = commands.Bot(command_prefix='do ')
+bot = commands.AutoShardedBot(command_prefix='do ')
 
 
 @bot.event
 async def on_ready():
-    print('bot bot active')
+    print('Logged in as: ' + str(bot.user.name) + ' ' + str(bot.user.id))
+    activity = discord.Game(name='with servers')
+    await bot.change_presence(activity=activity)
 
 @bot.event
 async def on_member_join(member):
