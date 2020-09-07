@@ -6,16 +6,21 @@ from datetime import timedelta
 import sys
 import sqlite3
 
-prometheus = commands.Bot(command_prefix='do ')
+bot = commands.Bot(command_prefix='do ')
 
 
-@prometheus.event
+@bot.event
 async def on_ready():
-    print('Prometheus bot active')
+    print('bot bot active')
+
+@bot.event
+async def on_member_join(member):
+    await member.send("Hello, and thank you for joining the Epoch Discord server!\nFor more information about our programs and subteams, please @Mother Board, or message #general.")
+    await member.send("If you are new to Epoch, message the #general channel to get assigned the correct prospective team member role so that you can see what various Epoch teams are up to!")
+    await member.send("Currently, our teams are:\n**Cluster Team** (working on the computational cluster)\n**Business Team** (working on funding and reaching out to sponsors)\n**Education Team** (working on various ML projects and designing curriculum to teach ML)")
 
 
-
-@prometheus.command(pass_context=True, name='silence')
+@bot.command(pass_context=True, name='silence')
 @commands.has_role("Cluster Team")
 async def silence(ctx, time=720):
     author = ctx.author
@@ -38,7 +43,7 @@ async def silence(ctx, time=720):
             ctx.send('Please enter a valid time')
             # line to enter a new time value if the time entered is not an integer
             try:
-                time = await prometheus.wait_for('message', check=check, timeout=15)
+                time = await bot.wait_for('message', check=check, timeout=15)
             except TimeoutError:
                 continue
         break
@@ -49,7 +54,7 @@ async def silence(ctx, time=720):
         end_time = str(datetime_from_minutes(time)).replace(' ', 'T') + 'Z'
         await ctx.send('Any comment?')
         try:
-            comment = await prometheus.wait_for('message', check=check, timeout=45)
+            comment = await bot.wait_for('message', check=check, timeout=45)
             if comment.content.lower == 'no' or 'nope' or 'n':
                 comment = 'No comment'
         except TimeoutError:
@@ -67,14 +72,14 @@ async def silence(ctx, time=720):
         if records == []:
             await ctx.send('We don\'t seem to have your real name on file. What is your real name?')
             try:
-                name = await prometheus.wait_for('message', check=check, timeout=45).content
+                name = await bot.wait_for('message', check=check, timeout=45).content
             except TimeoutError:
                 # defaults to no comment without a comment being entered
                 await ctx.send('No name was entered within 45 seconds. Cancelling...')
                 break
             await ctx.send('What is your IMSA email?')
             try:
-                email = await prometheus.wait_for('message', check=check, timeout=45).content
+                email = await bot.wait_for('message', check=check, timeout=45).content
             except TimeoutError:
                 # defaults to no comment without a comment being entered
                 await ctx.send('No name was entered within 45 seconds. Cancelling...')
@@ -113,11 +118,11 @@ async def silence(ctx, time=720):
         break
 
 
-@prometheus.command()
+@bot.command()
 # checks latency
 async def ping(ctx):
-    await ctx.send('latency: {} ms'.format(round(prometheus.latency * 1000)))
+    await ctx.send('latency: {} ms'.format(round(bot.latency * 1000)))
 
 key = sys.argv[1]
 
-prometheus.run(key)
+bot.run(key)
